@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <!--Colors in gazebo(not the same as rviz)-->
+    <gazebo reference="box_link">
+        <material>Gazebo/Blue</material>
+    </gazebo>
+
+    <gazebo reference="wheel1_link">
+        <material>Gazebo/Black</material>
+        <mu1>1.0</mu1> <!--Those are the coofficients of friction of the components-->
+        <mu2>1.0</mu2>
+    </gazebo>
+
+    <gazebo reference="wheel2_link">
+        <material>Gazebo/Black</material>
+        <mu1>1.0</mu1>
+        <mu2>1.0</mu2>
+    </gazebo>
+
+    <gazebo reference="lidar_link">
+        <material>Gazebo/Black</material>
+    </gazebo>
+
+    <gazebo reference="caster_wheel_link">
+        <material>Gazebo/Orange</material>
+        <mu1>0.001</mu1> <!--The riction of the caster wheel is set to a very small number to allow for sliding of the wheel-->
+        <mu2>0.001</mu2>
+    </gazebo>
+
+    <!--The differential drive plugin of gazebo-->
+    <gazebo>
+        <plugin filename="gz-sim-diff-drive-system" name="gz::sim::systems::DiffDrive">
+        
+            <left_joint>box_to_wheel1_link</left_joint>
+            <right_joint>box_to_wheel2_link</right_joint>
+ 
+            <wheel_separation>0.225</wheel_separation>
+            <wheel_radius>0.04</wheel_radius>
+            <max_wheel_torque>20</max_wheel_torque>
+            <max_wheel_acceleration>1.0</max_wheel_acceleration>
+
+            <topic>cmd_vel</topic>
+            <publish_odom>true</publish_odom>
+            <publish_odom_tf>true</publish_odom_tf>
+            <publish_wheel_tf>true</publish_wheel_tf>
+            <frame_id>odom</frame_id>
+            <child_frame_id>base_link</child_frame_id>
+        </plugin>
+    </gazebo>
+
+    <!--The plugin publishing real-time simulation data from the specified joints-->
+    <gazebo>
+        <plugin filename="gz-sim-joint-state-publisher-system" name="gz::sim::systems::JointStatePublisher">
+            <joint_name>box_to_wheel1_link</joint_name>
+            <joint_name>box_to_wheel2_link</joint_name>
+        </plugin>
+    </gazebo>
+
+    <!--This is a global plugin for gazebo to deal with sensors-->
+    <gazebo>
+        <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
+            <render_engine>ogre2</render_engine>
+        </plugin>
+    </gazebo>
+
+    <!--THis is the lidar plugin put on the lidar_link part in the simulation-->
+    <gazebo reference="lidar_link">
+        <sensor name="lidar" type="gpu_lidar">
+            <always_on>true</always_on>
+            <visualize>true</visualize>
+            <update_rate>10</update_rate>
+            <topic>scan</topic>
+            <gz_frame_id>lidar_link</gz_frame_id>
+            <lidar>
+                <scan>
+                    <horizontal>
+                        <samples>360</samples>
+                        <resolution>1</resolution>
+                        <min_angle>-3.14159</min_angle>
+                        <max_angle>3.14159</max_angle>
+                    </horizontal>
+                </scan>
+                <range>
+                    <min>0.12</min>
+                    <max>10.0</max>
+                    <resolution>0.01</resolution>
+                </range>
+                <noise>
+                    <type>gaussian</type>
+                    <mean>0.0</mean>
+                    <stddev>0.01</stddev>
+                </noise>
+            </lidar>
+        </sensor>
+    </gazebo>
+</robot>

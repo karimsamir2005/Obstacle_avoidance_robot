@@ -7,5 +7,5 @@ This file contains the files needed to describe the robot model
 <robot name = "obstacle_robot" xmlns:xacro ="http://www.ros.org/wiki/xacro" > 
     <xacro:include filename = "material.xacro"/>
     <xacro:include filename = "obstacle_robot.xacro"/>
-
+    <xacro:include filename = "obstacle_gazebo.xacro"/>
 </robot>
