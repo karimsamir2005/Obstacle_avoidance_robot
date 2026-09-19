@@ -94,4 +94,13 @@
             </lidar>
         </sensor>
     </gazebo>
+
+    <plugin filename="gz-sim-joint-state-publisher-system"
+            name="gz::sim::systems::JointStatePublisher">
+        <topic>/world/empty/model/obstacle_robot/joint_state</topic>
+        <joint_name>box_to_wheel1_link</joint_name>
+        <joint_name>box_to_wheel2_link</joint_name>
+    </plugin>
+
+
 </robot>
