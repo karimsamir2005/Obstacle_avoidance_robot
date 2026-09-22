@@ -1,43 +1,53 @@
 <?xml version="1.0"?>
+
+
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-    <!--Colors in gazebo(not the same as rviz)-->
     <gazebo reference="box_link">
+        <preserveFixedJoint>true</preserveFixedJoint> <!--Gazebo lumps all fixed joints in a single joint to preserve its physics calculation from computing physics for parts that cannot move 
+        relative to each other (it normally calculates mass , inertia , collision across 6 DOF so this is a way of optimization of resources but it makes the box_link 
+        frame sieze to exist which make the wheel transformation wrong  .. this is the solution telling gazebo not to lump this frame and delete it)-->
         <material>Gazebo/Blue</material>
+        <self_collide>false</self_collide>
     </gazebo>
 
+    <!--Colors in gazebo(not the same as rviz)-->
     <gazebo reference="wheel1_link">
         <material>Gazebo/Black</material>
         <mu1>1.0</mu1> <!--Those are the coofficients of friction of the components-->
         <mu2>1.0</mu2>
+        <self_collide>false</self_collide>
     </gazebo>
 
     <gazebo reference="wheel2_link">
         <material>Gazebo/Black</material>
         <mu1>1.0</mu1>
         <mu2>1.0</mu2>
+        <self_collide>false</self_collide>
     </gazebo>
 
     <gazebo reference="lidar_link">
         <material>Gazebo/Black</material>
+        <self_collide>false</self_collide>
     </gazebo>
 
     <gazebo reference="caster_wheel_link">
         <material>Gazebo/Orange</material>
         <mu1>0.001</mu1> <!--The riction of the caster wheel is set to a very small number to allow for sliding of the wheel-->
         <mu2>0.001</mu2>
+        <self_collide>false</self_collide>
     </gazebo>
 
     <!--The differential drive plugin of gazebo-->
     <gazebo>
         <plugin filename="gz-sim-diff-drive-system" name="gz::sim::systems::DiffDrive">
         
-            <left_joint>box_to_wheel1_link</left_joint>
-            <right_joint>box_to_wheel2_link</right_joint>
+            <left_joint>box_to_wheel1_joint</left_joint> <!--This is bases on the rviz visualization-->
+            <right_joint>box_to_wheel2_joint</right_joint>
  
-            <wheel_separation>0.225</wheel_separation>
+            <wheel_separation>0.21</wheel_separation>
             <wheel_radius>0.04</wheel_radius>
-            <max_wheel_torque>20</max_wheel_torque>
+            <max_wheel_torque>20</max_wheel_torque> <!--This is normally decided by the motor specs-->
             <max_wheel_acceleration>1.0</max_wheel_acceleration>
 
             <topic>cmd_vel</topic>
@@ -52,8 +62,8 @@
     <!--The plugin publishing real-time simulation data from the specified joints-->
     <gazebo>
         <plugin filename="gz-sim-joint-state-publisher-system" name="gz::sim::systems::JointStatePublisher">
-            <joint_name>box_to_wheel1_link</joint_name>
-            <joint_name>box_to_wheel2_link</joint_name>
+            <joint_name>box_to_wheel1_joint</joint_name>
+            <joint_name>box_to_wheel2_joint</joint_name>
         </plugin>
     </gazebo>
 
@@ -98,9 +108,8 @@
     <plugin filename="gz-sim-joint-state-publisher-system"
             name="gz::sim::systems::JointStatePublisher">
         <topic>/world/empty/model/obstacle_robot/joint_state</topic>
-        <joint_name>box_to_wheel1_link</joint_name>
-        <joint_name>box_to_wheel2_link</joint_name>
+        <joint_name>box_to_wheel1_joint</joint_name>
+        <joint_name>box_to_wheel2_joint</joint_name>
     </plugin>
-
 
 </robot>
