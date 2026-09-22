@@ -104,11 +104,17 @@ def generate_launch_description():
     output='screen'
     )
 
+    start_avoidance_logic = Node(
+        package = 'obstacle_avoidance_pkg',
+        executable= 'avoidance_logic_node'  
+    )
+
     return LaunchDescription([
         start_gazebo,
         start_robot_state_publisher,
         spawn_robot,
         start_gazebo_bridge,
         start_rviz,
-        start_teleop
+        #start_teleop,
+        start_avoidance_logic
     ])

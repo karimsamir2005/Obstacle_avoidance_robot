@@ -84,10 +84,6 @@ This file contains the main robot description used in rviz and gazebo
 
 <!--===============================Link Defenitions========================-->
 <link name="base_link">
-    <inertial>
-        <origin xyz = "0 0 0" rpy = " 0 0 0"/>
-        <mass value = "0.001"/>
-    </inertial>
 </link>
 
 <!--box link(visual / collision / inertial data)-->
