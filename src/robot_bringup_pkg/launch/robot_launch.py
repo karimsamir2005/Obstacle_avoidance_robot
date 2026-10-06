@@ -1,6 +1,6 @@
 #Those are the needed import in the launch file
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription
+from launch.actions import AppendEnvironmentVariable, IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import Command, PathJoinSubstitution
 
@@ -32,6 +32,13 @@ def generate_launch_description():
         'gazebo_bridge.yaml'
     ])
 
+    #defining the custom world file i made(edges world)
+    edges_world_file = PathJoinSubstitution([
+        FindPackageShare('world_pkg'),
+        'worlds',
+        'edges_world.sdf'
+    ])
+
     #this will take the xacro file and transform it to urdf format
     robot_description = ParameterValue (
         Command(['xacro ' , robot_urdf_file]),
@@ -48,10 +55,17 @@ def generate_launch_description():
             ])
         ]),
         launch_arguments={
-            'gz_args': 'empty.sdf -r'
+            'gz_args': [edges_world_file, ' -r']
         }.items()
     )
 
+    set_gz_resource_path = AppendEnvironmentVariable(
+    name='GZ_SIM_RESOURCE_PATH',
+    value=PathJoinSubstitution([
+        FindPackageShare('world_pkg'),
+        'models'
+    ])
+    )
 
     start_robot_state_publisher = Node(
         package='robot_state_publisher',
@@ -110,11 +124,12 @@ def generate_launch_description():
     )
 
     return LaunchDescription([
+        set_gz_resource_path,
         start_gazebo,
         start_robot_state_publisher,
         spawn_robot,
         start_gazebo_bridge,
         start_rviz,
         #start_teleop,
-        start_avoidance_logic
+        start_avoidance_logic,
     ])
