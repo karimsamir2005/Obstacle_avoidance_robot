@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg import LaserScan
@@ -8,7 +7,7 @@ class AvoidanceLogicNode(Node):
     def __init__(self):
         super().__init__('avoidance_logic_node')
 
-        #Subscribe to the LIDAR ros topic coming from the gazebo brdige
+        #Subscribe to the LIDAR ros topic coming from the gazebo bridge
         self.lidar_data = self.create_subscription(
             LaserScan,
             '/scan',
@@ -16,16 +15,15 @@ class AvoidanceLogicNode(Node):
             10
         )
 
-        # Publishing velocity command to the differential drive plugin
+        #Publishing velocity commands to the differential plugin
         self.send_vel_command = self.create_publisher(Twist, '/cmd_vel', 10)
 
-        # Logic Thresholds.
+        #Logic Parameters
         self.declare_parameter('safe_distance', 0.4)     # Distance to stop/turn (meters)
         self.declare_parameter('forward_speed', 0.2)    # Linear speed (m/s)
         self.declare_parameter('turn_speed', 0.5)        # Angular speed (rad/s)
 
     def filter_ranges(self, scan_slice, r_min, r_max):
-        """Filter out inf, nan, and out-of-bounds readings."""
         valid = [r for r in scan_slice if r_min < r < r_max]
         return min(valid) if len(valid) > 0 else float('inf')
 
