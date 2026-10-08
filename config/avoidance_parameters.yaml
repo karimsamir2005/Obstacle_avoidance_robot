@@ -1,0 +1,5 @@
+avoidance_logic_node:
+  ros__parameters:
+    safe_distance: 0.4    # Distance to stop/turn (meters)
+    forward_speed: 0.2    # Linear speed (m/s)
+    turn_speed: 0.5       # Angular speed (rad/s)

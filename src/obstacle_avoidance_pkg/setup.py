@@ -12,13 +12,10 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
-        
         # Install all launch files:
         (os.path.join('share', package_name, 'launch'), glob('launch/*launch.[pxy][yma]*')),
-        
         # Install bridge and yaml configs:
         (os.path.join('share', package_name, 'config'), glob('config/*')),
-        
         # Install rviz configs:
         (os.path.join('share', package_name, 'rviz'), glob('rviz/*')),
     ],

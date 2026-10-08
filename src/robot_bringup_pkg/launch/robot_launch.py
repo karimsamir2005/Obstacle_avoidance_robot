@@ -120,7 +120,12 @@ def generate_launch_description():
 
     start_avoidance_logic = Node(
         package = 'obstacle_avoidance_pkg',
-        executable= 'avoidance_logic_node'  
+        executable= 'avoidance_logic_node',
+        parameters = [PathJoinSubstitution([
+            FindPackageShare('obstacle_avoidance_pkg'),
+            'config',
+            'avoidance_parameters.yaml'
+        ])]
     )
 
     return LaunchDescription([
