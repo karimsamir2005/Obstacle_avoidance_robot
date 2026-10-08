@@ -33,22 +33,18 @@ class AvoidanceLogicNode(Node):
         front_dist = self.filter_ranges(msg.ranges[150:210], msg.range_min, msg.range_max)
         left_dist  = self.filter_ranges(msg.ranges[210:270], msg.range_min, msg.range_max)
 
-        safe_dist = self.get_parameter('safe_distance').value
-        fwd_speed = self.get_parameter('forward_speed').value
-        turn_spd  = self.get_parameter('turn_speed').value
-
         cmd = Twist()
 
-        if front_dist > safe_dist:
+        if front_dist > self.safe_distance:
             # Front is clear -> Move forward
-            cmd.linear.x = fwd_speed
+            cmd.linear.x = self.forward_speed
             cmd.angular.z = 0.0
         else:
             cmd.linear.x = 0.0
             if left_dist > right_dist:
-                cmd.angular.z = turn_spd   # Turn left
+                cmd.angular.z = self.turn_speed   # Turn left
             else:
-                cmd.angular.z = -turn_spd  # Turn right
+                cmd.angular.z = -self.turn_speed  # Turn right
 
         self.send_vel_command.publish(cmd)
 
